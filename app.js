@@ -7,7 +7,6 @@ var Spotify = require('node-spotify-api');
 
 var command = process.argv[2];
 
-
 myTweets = () => {
 	// having keys in same file
 	var client = new Twitter ({
@@ -32,36 +31,53 @@ myTweets = () => {
 		if (!error) {
 	      // console.log(tweets[0].text);
 	      for (var i = 0; i < tweets.length; i++) {
-	      	console.log(tweets[i].text);
+	      	console.log(tweets[i].text, `*Time: ${tweets[i].created_at}*`);
 	      }
 	    }
 
 	})
 }
 
-spotifySong = () => {
+spotifySong = (songName) => {
 
   var spotify = new Spotify({
     id: keys.spotifyKeys.id,
     secret: keys.spotifyKeys.secret
   });
 
-  spotify.search({ type: 'track', query: 'I want it that way' }, function(err, data) {
+  // var songName = process.argv[3];
+  var limit = 5
+
+  spotify.search({ type: 'track', query: process.argv[3] ? process.argv[3] : songName, limit: limit }, function(err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
- 
-      console.log(data.tracks.items[0]); 
-    });
+
+	for(var i = 0; i < limit; i++) {
+      console.log(`Result ${i+1}`);
+      console.log(`--------------------`);
+      console.log(`Artist(s) Name: ${data.tracks.items[i].artists[0].name}`); 
+      console.log(`Album Name: ${data.tracks.items[i].album.name}`); 
+      console.log(`Song Name: ${data.tracks.items[i].name}`);  
+      console.log(`Spotify Preview Link: ${data.tracks.items[i].external_urls.spotify}`); 
+      console.log(`Popularity: ${data.tracks.items[i].popularity}`); 
+      console.log(`--------------------`);
+      console.log(`\n`);
+    } 
+
+  });
 }
 
-searchMovie = () => {
+searchMovie = (movieName) => {
   
   var request = require('request');
 
-  var movieName = process.argv[3];
-
-  var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
+  // var movieName = process.argv[3];
+  if (process.argv[3]) {
+  	var queryUrl = "http://www.omdbapi.com/?t=" + process.argv[3] + "&y=&plot=short&apikey=40e9cece";
+  } else {
+  	var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=40e9cece";
+  }
 
   request(queryUrl, function (error, response, body) {
 
@@ -79,6 +95,33 @@ searchMovie = () => {
   })
 }
 
+doWhatItSays = () => {
+
+	fs.readFile('random.txt', 'utf8', function(error, data) {
+
+		var dataArr = data.split(',');
+		console.log(dataArr[0]);
+		console.log(dataArr[1]);
+
+		switch (dataArr[0]) {
+			case 'my-tweets':
+				myTweets();
+				break;
+
+			case 'spotify-this-song':
+				spotifySong(dataArr[1]);
+				break;
+
+			case 'movie-this':
+				searchMovie(dataArr[1]);
+				break;
+
+		}
+
+	})
+
+}
+
 switch (command) {
 	case 'my-tweets':
 		myTweets();
@@ -91,7 +134,13 @@ switch (command) {
 	case 'movie-this':
 		searchMovie();
 		break;
+
+	case 'do-what-it-says':
+		doWhatItSays();
+		break;
 }
+
+
 
 
 
