@@ -21,7 +21,6 @@
     "inquirer": "^3.3.0",
     "node-spotify-api": "^1.0.7",
     "request": "^2.82.0",
-    "twit": "^2.2.9",
     "twitter": "^1.7.1"
   }
 }
