@@ -134,7 +134,7 @@ inquirer
 
   		    {
   		      type: 'input',
-			  message: 'Enter a song name. Enter artist after song name for more accuracy (i.e. learning to fly tom petty)',
+			  message: 'Enter a song name. '.red.bold + 'Enter artist after song name for more accuracy (i.e. learning to fly tom petty)'.gray,
 			  name: 'song'
   		    }
 
