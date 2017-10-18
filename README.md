@@ -7,5 +7,5 @@ This Node.js application allows users to read twitter feeds, get information rel
 * Git Clone the repository
 * Navigate to the folder where the repository exists using Git Bash or Terminal
 * Run the command npm install to download the required dependencies
-* Run the command node game.js
+* Run the command node liri.js
 ```
